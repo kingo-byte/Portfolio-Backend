@@ -51,7 +51,7 @@ namespace Portfolio_Backend.Controllers
                 return NotFound();
             }
 
-            return message;
+            return Ok(message);
         }
 
         // PUT: api/Messages/5
@@ -97,7 +97,7 @@ namespace Portfolio_Backend.Controllers
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMessage", new { id = message.Id }, message);
+            return Ok(message);
         }
 
         // DELETE: api/Messages/5
