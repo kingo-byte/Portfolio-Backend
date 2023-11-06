@@ -17,6 +17,22 @@ namespace BAL.Services
             _context = context;
         }
 
+        public User AddUser(User user)
+        {
+            User newUser = _context.Users.Add(user).Entity;
+
+            _context.SaveChanges(); 
+
+            return newUser;
+        }
+
+        public User CheckUser(User user)
+        {
+            var foundUser = _context.Users.Where(u => u.UserName.Equals(user.UserName) || u.Email.Equals(user.Email)).FirstOrDefault();
+
+            return foundUser;
+        }
+
         public User GetUser(int id)
         {
             return _context.Users.Find(id);

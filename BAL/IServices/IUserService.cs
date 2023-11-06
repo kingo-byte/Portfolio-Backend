@@ -12,5 +12,9 @@ namespace BAL.IServices
         public User GetUser(int id);
         
         public IEnumerable<User> GetUsers();
+
+        public User AddUser(User user);
+
+        public User CheckUser(User user);
     }
 }
