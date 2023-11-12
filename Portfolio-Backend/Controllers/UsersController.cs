@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using BAL.IServices;
 using DAL.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Portfolio_Backend.Models;
 using Portfolio_Backend.Repository;
 
@@ -18,9 +22,11 @@ namespace Portfolio_Backend.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UsersController(IUserService userService) 
+        private readonly IConfiguration _configuration;
+        public UsersController(IUserService userService, IConfiguration configuration) 
         {
             _userService = userService;
+            _configuration = configuration; 
         }
 
         [HttpPost("Register")]
@@ -64,7 +70,9 @@ namespace Portfolio_Backend.Controllers
                 return BadRequest("Invalid Password");
             }
 
-            return Ok(checkUser.Id);
+            string token = CreateToken(checkUser);
+
+            return Ok(token);
         }
 
         [HttpGet("{id}")]
@@ -73,6 +81,28 @@ namespace Portfolio_Backend.Controllers
             var user = _userService.GetUser(id);
 
             return user != null ? Ok(user): BadRequest("User was not found");
+        }
+
+        private string CreateToken(User user) 
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt) 
