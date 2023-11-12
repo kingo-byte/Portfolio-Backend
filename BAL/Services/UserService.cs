@@ -38,7 +38,7 @@ namespace BAL.Services
 
         public User GetUser(int id)
         {
-            return _context.Users.Find(id);
+            return _context.Users.Include(u => u.role).FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<User> GetUsers()

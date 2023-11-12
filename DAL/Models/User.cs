@@ -20,6 +20,7 @@ namespace Portfolio_Backend.Models
         public string Email { get; set; } = string.Empty;
 
         [ForeignKey("Role")]
+        [JsonIgnore]
         public int RoleId { set; get; }
 
         public virtual Role? role { set; get; }
