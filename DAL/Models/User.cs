@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Portfolio_Backend.Models
@@ -16,6 +18,11 @@ namespace Portfolio_Backend.Models
 
         [Required]
         public string Email { get; set; } = string.Empty;
+
+        [ForeignKey("Role")]
+        public int RoleId { set; get; }
+
+        public virtual Role? role { set; get; }
 
         [JsonIgnore]
         public byte[] PasswordHash { get; set; }

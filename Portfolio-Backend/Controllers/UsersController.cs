@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BAL.IServices;
 using DAL.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,7 @@ namespace Portfolio_Backend.Controllers
                 Email = request.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
+                RoleId = 1
             };
 
             return Ok(_userService.AddUser(user));
@@ -76,6 +78,7 @@ namespace Portfolio_Backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Get(int id) 
         {
             var user = _userService.GetUser(id);
@@ -88,7 +91,7 @@ namespace Portfolio_Backend.Controllers
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-
+                new Claim(ClaimTypes.Role, user.role.Name)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));

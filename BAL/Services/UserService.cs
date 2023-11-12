@@ -1,4 +1,5 @@
 ﻿using BAL.IServices;
+using Microsoft.EntityFrameworkCore;
 using Portfolio_Backend.Models;
 using Portfolio_Backend.Repository;
 using System;
@@ -28,7 +29,9 @@ namespace BAL.Services
 
         public User CheckUser(User user)
         {
-            var foundUser = _context.Users.Where(u => u.UserName.Equals(user.UserName) || u.Email.Equals(user.Email)).FirstOrDefault();
+            User foundUser = _context.Users.Include(u => u.role)
+                .Where(u => u.UserName.Equals(user.UserName) || u.Email.Equals(user.Email))
+                .FirstOrDefault();
 
             return foundUser;
         }
