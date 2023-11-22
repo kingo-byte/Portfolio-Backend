@@ -1,5 +1,6 @@
 using BAL.IServices;
 using BAL.Services;
+using DAL.DapperAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -45,6 +46,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext<PortfolioDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("PortfolioConnectionString")));
 
+builder.Services.AddScoped<DapperAccess>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();

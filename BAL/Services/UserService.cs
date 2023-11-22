@@ -1,4 +1,5 @@
 ﻿using BAL.IServices;
+using DAL.DapperAccess;
 using Microsoft.EntityFrameworkCore;
 using Portfolio_Backend.Models;
 using Portfolio_Backend.Repository;
@@ -13,9 +14,12 @@ namespace BAL.Services
     public class UserService : IUserService
     {
         private readonly PortfolioDbContext _context;
-        public UserService(PortfolioDbContext context)
+        private readonly DapperAccess _dapper;
+
+        public UserService(PortfolioDbContext context, DapperAccess dapper)
         {
             _context = context;
+            _dapper = dapper;
         }
 
         public User AddUser(User user)
@@ -25,6 +29,20 @@ namespace BAL.Services
             _context.SaveChanges(); 
 
             return newUser;
+        }
+
+        public int BulkInsert(List<User> users)
+        {
+            var objects = new List<object>();
+
+            foreach (var user in users) 
+            {
+                objects.Add(new { UserName = user.UserName, Email = user.Email, PasswordHash = user.PasswordHash, PasswordSalt = user.PasswordSalt, RoleId = user.RoleId });
+            }
+
+            int affectedRows = _dapper.BulkExecute("UsersBulkInsert", objects);
+
+            return affectedRows;
         }
 
         public User CheckUser(User user)

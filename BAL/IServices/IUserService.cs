@@ -16,5 +16,7 @@ namespace BAL.IServices
         public User AddUser(User user);
 
         public User CheckUser(User user);
+
+        public int BulkInsert(List<User> users);
     }
 }

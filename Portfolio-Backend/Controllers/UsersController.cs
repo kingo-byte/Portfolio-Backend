@@ -51,6 +51,50 @@ namespace Portfolio_Backend.Controllers
 
             return Ok(_userService.AddUser(user));
         }
+
+        [HttpPost("BulkRegister")]
+        public async Task<IActionResult> BulkRegister([FromBody] List<SignUpDto> requests)
+        {
+            if (!ModelState.IsValid || requests == null || !requests.Any())
+            {
+                return BadRequest("Invalid User(s)");
+            }
+
+            try
+            {
+                List<User> users = new List<User>();
+
+                foreach (var request in requests)
+                {
+                    CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+                    users.Add(new User
+                    {
+                        UserName = request.UserName,
+                        Email = request.Email,
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        RoleId = 1
+                    });
+                }
+
+                var result = _userService.BulkInsert(users);
+
+                if (result == 1)
+                {
+                    return Ok("Users registered successfully");
+                }
+                else
+                {
+                    return StatusCode(500, "Failed to register users");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(SignInDTO request) 
         {
