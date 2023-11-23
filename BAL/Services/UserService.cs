@@ -49,14 +49,14 @@ namespace BAL.Services
         {
             User foundUser = _context.Users.Include(u => u.role)
                 .Where(u => u.UserName.Equals(user.UserName) || u.Email.Equals(user.Email))
-                .FirstOrDefault();
+                .FirstOrDefault()!;
 
             return foundUser;
         }
 
         public User GetUser(int id)
         {
-            return _context.Users.Include(u => u.role).FirstOrDefault(x => x.Id == id);
+            return _context.Users.Include(u => u.role).FirstOrDefault(x => x.Id == id)!;
         }
 
         public IEnumerable<User> GetUsers()
