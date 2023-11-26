@@ -51,6 +51,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISkillsServices, SkillsServices>();
 builder.Services.AddScoped<ILanguageService, LanguageServices>();
 builder.Services.AddScoped<IMessageServices, MessageServices>();
+builder.Services.AddScoped<IExperienceService, ExperienceService>();
 
 var app = builder.Build();
 
