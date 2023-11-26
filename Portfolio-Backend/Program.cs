@@ -49,6 +49,7 @@ builder.Services.AddDbContext<PortfolioDbContext>(o => o.UseSqlServer(builder.Co
 builder.Services.AddScoped<DapperAccess>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISkillsServices, SkillsServices>();
+builder.Services.AddScoped<ILanguageService, LanguageServices>();
 
 var app = builder.Build();
 
