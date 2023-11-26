@@ -46,13 +46,14 @@ namespace Portfolio_Backend.Controllers
                 Email = request.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                RoleId = 1
+                RoleId = request.RoleId
             };
 
             return Ok(_userService.AddUser(user));
         }
 
         [HttpPost("BulkRegister")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BulkRegister([FromBody] List<SignUpDto> requests)
         {
             if (!ModelState.IsValid || requests == null || !requests.Any())
@@ -74,7 +75,7 @@ namespace Portfolio_Backend.Controllers
                         Email = request.Email,
                         PasswordHash = passwordHash,
                         PasswordSalt = passwordSalt,
-                        RoleId = 1
+                        RoleId = request.RoleId
                     });
                 }
 
@@ -135,7 +136,7 @@ namespace Portfolio_Backend.Controllers
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.role.Name)
+                new Claim(ClaimTypes.Role, user.role.Name) 
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));

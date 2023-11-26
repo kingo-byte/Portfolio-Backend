@@ -8,7 +8,8 @@ namespace DAL.Enum
 {
     public enum UserRoleEnum 
     {
-        Admin,
-        User
+        Admin = 1,
+        User = 2,
+        Anonymous = 0
     }
 }

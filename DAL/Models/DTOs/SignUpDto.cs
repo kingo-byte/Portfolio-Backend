@@ -17,5 +17,8 @@ namespace DAL.Models.DTOs
 
         [Required]
         public string Password { get; set; } = string.Empty;
+
+        [Required]  
+        public int RoleId { get; set; } = 0;    
     }
 }
