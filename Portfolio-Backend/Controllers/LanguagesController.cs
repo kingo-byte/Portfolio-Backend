@@ -25,7 +25,6 @@ namespace Portfolio_Backend.Controllers
             _userService = userService;
         }
 
-
         [HttpPost("AddLanguage")]
         [Authorize(Roles = "Admin")]
         public IActionResult AddLanguage(Language language)
@@ -37,6 +36,11 @@ namespace Portfolio_Backend.Controllers
                 if (user == null)
                 {
                     return BadRequest("User was not found");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid Skill");
                 }
 
                 Language addedLanguage = _languageService.AddLanguage(language);

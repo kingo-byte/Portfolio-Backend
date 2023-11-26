@@ -38,6 +38,11 @@ namespace Portfolio_Backend.Controllers
                     return BadRequest("User was not found");  
                 }
 
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid Skill");
+                }
+
                 Skill addedSkill = _skillsServices.AddSkill(skill);
 
                 return Ok(addedSkill);

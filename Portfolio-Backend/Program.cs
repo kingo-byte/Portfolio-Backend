@@ -50,6 +50,7 @@ builder.Services.AddScoped<DapperAccess>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISkillsServices, SkillsServices>();
 builder.Services.AddScoped<ILanguageService, LanguageServices>();
+builder.Services.AddScoped<IMessageServices, MessageServices>();
 
 var app = builder.Build();
 
