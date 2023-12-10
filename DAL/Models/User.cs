@@ -30,5 +30,7 @@ namespace Portfolio_Backend.Models
 
         [JsonIgnore]
         public byte[] PasswordSalt { get; set; }
+
+       public virtual List<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

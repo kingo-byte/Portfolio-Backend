@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using Portfolio_Backend.Models;
 
 namespace Portfolio_Backend.Repository
@@ -18,5 +19,7 @@ namespace Portfolio_Backend.Repository
         public DbSet<Skill> Skills { get; set; }    
 
         public DbSet<Language> Languages { get; set; }   
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }  
     }
 }

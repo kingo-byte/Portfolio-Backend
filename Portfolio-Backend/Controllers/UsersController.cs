@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using BAL.IServices;
+using DAL.Models;
 using DAL.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,10 +24,12 @@ namespace Portfolio_Backend.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IRefreshTokenServices _refreshTokenServices;
         private readonly IConfiguration _configuration;
-        public UsersController(IUserService userService, IConfiguration configuration) 
+        public UsersController(IUserService userService, IRefreshTokenServices refreshTokenServices, IConfiguration configuration) 
         {
             _userService = userService;
+            _refreshTokenServices = refreshTokenServices;
             _configuration = configuration; 
         }
 
@@ -119,16 +122,48 @@ namespace Portfolio_Backend.Controllers
 
             string token = CreateToken(checkUser);
 
+            SetRefreshToken(checkUser.Id);
+
             return Ok(token);
         }
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult Get(int id) 
+        public IActionResult Get(int id)
         {
             var user = _userService.GetUser(id);
 
-            return user != null ? Ok(user): BadRequest("User was not found");
+            return user != null ? Ok(user) : BadRequest("User was not found");
+        }
+
+        [HttpPost("RefreshToken")]
+        [Authorize]
+        public IActionResult RefreshToken(int userId) 
+        {
+            // Get last generated token
+            var refreshToken = _refreshTokenServices.GetUserToken(userId);
+            var loggedInUser = _userService.GetUser(userId);
+
+            if(loggedInUser == null) 
+            {
+                return BadRequest("Invalid User");
+            }
+
+            if(refreshToken == null)
+            {
+                return Unauthorized("User is not signed In");
+            }
+
+            if(refreshToken.ExpiresAt < DateTime.UtcNow) 
+            {
+                return Unauthorized("Token Expired");
+            }
+
+            string token = CreateToken(loggedInUser);
+
+            SetRefreshToken(loggedInUser.Id);
+
+            return Ok(token);   
         }
 
         private string CreateToken(User user) 
@@ -170,6 +205,22 @@ namespace Portfolio_Backend.Controllers
 
                 return computedHash.SequenceEqual(passwordHash);
             }
+        }
+
+        private RefreshToken SetRefreshToken(int userId)
+        {
+            var token = new RefreshToken
+            {
+                Token = Guid.NewGuid(),
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
+                CreatedAt = DateTime.UtcNow,
+                UserId = userId
+            };
+
+            //add new refresh token in the database
+            RefreshToken refreshToken =  _refreshTokenServices.AddToken(token);
+
+            return refreshToken;
         }
     } 
 }
