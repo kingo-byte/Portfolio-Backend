@@ -32,7 +32,7 @@ namespace Portfolio_Backend.Controllers
         }
 
         [HttpPost("AddExperience")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<Experience>> AddExperience(Experience experience)
         {
             try 

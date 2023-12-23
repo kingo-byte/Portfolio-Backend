@@ -26,7 +26,7 @@ namespace Portfolio_Backend.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult AddSkill(Skill skill)
         {
             try

@@ -26,7 +26,7 @@ namespace Portfolio_Backend.Controllers
         }
 
         [HttpPost("AddLanguage")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult AddLanguage(Language language)
         {
             try

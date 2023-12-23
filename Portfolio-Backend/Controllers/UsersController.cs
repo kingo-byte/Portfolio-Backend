@@ -56,7 +56,7 @@ namespace Portfolio_Backend.Controllers
         }
 
         [HttpPost("BulkRegister")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> BulkRegister([FromBody] List<SignUpDto> requests)
         {
             if (!ModelState.IsValid || requests == null || !requests.Any())
@@ -127,9 +127,9 @@ namespace Portfolio_Backend.Controllers
             return Ok(token);
         }
 
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult Get(int id)
+        [HttpGet("GetUser/{id}")]
+        //[Authorize(Roles = "Admin")]
+        public IActionResult GetUser(int id)
         {
             var user = _userService.GetUser(id);
 
@@ -137,7 +137,7 @@ namespace Portfolio_Backend.Controllers
         }
 
         [HttpPost("RefreshToken")]
-        [Authorize]
+        //[Authorize]
         public IActionResult RefreshToken(int userId) 
         {
             // Get last generated token
