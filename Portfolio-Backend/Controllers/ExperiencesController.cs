@@ -51,8 +51,6 @@ namespace Portfolio_Backend.Controllers
 
                 Experience addedExperience = await _experienceService.AddExperience(experience);
 
-                Console.WriteLine("teadaskdjadskadkapkdasp");
-
                 return Ok(addedExperience);
             }
             catch (Exception ex)
